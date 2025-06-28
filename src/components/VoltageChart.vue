@@ -1,14 +1,16 @@
 <template>
   <div v-if="hasVisibleItems" ref="plotlyChart" style="width: 100%; height: 500px"></div>
-  <div v-else class="empty-state">No items selected - please check some boxes above</div>
+  <div v-else class="empty-state">No items selected - please adjust filters above</div>
 </template>
 
 <script lang="ts">
-import { onMounted, ref, onBeforeUnmount, watchEffect, type PropType, computed } from 'vue'
-import Plotly, { Config } from 'plotly.js-dist'
+import { onMounted, ref, watchEffect, type PropType, computed } from 'vue'
+// @ts-expect-error
+import Plotly, { type Config, type PlotlyHTMLElement } from 'plotly.js-dist'
+import { useDarkModeStore } from '@/stores/darkMode'
 
-import type { TransformerData } from '../../server/sampleTransformerData'
 import { createLayout, createTrace, getThemeColors } from '@/utils/graph'
+import type { TransformerData } from '../../server/sampleTransformerData'
 
 const traceColors = ['teal', 'darkgreen', 'orange', 'blue', 'crimson']
 
@@ -17,49 +19,35 @@ export default {
   props: {
     transformersData: {
       type: Array as PropType<TransformerData[]>,
-      // required: true,
       validator: (data: TransformerData[]) => data.length > 0,
-    },
-    visibilityState: {
-      type: Object as PropType<Record<string, boolean>>,
-      required: true,
     },
     title: {
       type: String,
       default: 'Voltage Readings',
     },
-    initialTheme: {
-      type: String as PropType<'light' | 'dark' | 'system'>,
-      default: 'system',
-      validator: (value: string) => ['light', 'dark', 'system'].includes(value),
-    },
   },
   setup(props) {
-    const { initialTheme, visibilityState } = props
-    const plotlyChart = ref<HTMLDivElement | null>(null)
+    const plotlyChart = ref<PlotlyHTMLElement | null>(null)
+
     const hasVisibleItems = computed(() => {
-      return Object.values(visibilityState).some(Boolean)
+      return props.transformersData?.length
     })
-    const colorSchemeMedia = ref<MediaQueryList | null>(null)
-    const isDarkMode = ref(false)
+    const isDarkMode = useDarkModeStore().isDarkMode
 
     const renderChart = (): void => {
-      const { title, transformersData, visibilityState } = props
+      const { title, transformersData } = props
 
       if (!plotlyChart.value || !transformersData) return
 
-      const themeColors = getThemeColors(isDarkMode.value)
-      const filteredtransformersData = transformersData.filter(
-        (transformer) => visibilityState[transformer.assetId],
-      )
+      const themeColors = getThemeColors(isDarkMode)
 
-      const traces = filteredtransformersData.map((transformer) =>
+      const traces = transformersData.map((transformer) =>
         createTrace({
           name: transformer.name,
           themeColors,
           voltageData: transformer.lastTenVoltgageReadings,
           traceColor: traceColors[transformer.assetId % traceColors.length],
-          isDarkMode: isDarkMode.value,
+          isDarkMode,
         }),
       )
 
@@ -72,26 +60,6 @@ export default {
         Plotly.newPlot(plotlyChart.value, traces, layout, config)
       }
     }
-
-    const handleThemeChange = (e: MediaQueryListEvent): void => {
-      isDarkMode.value = e.matches
-    }
-
-    onMounted(() => {
-      colorSchemeMedia.value = window.matchMedia('(prefers-color-scheme: dark)')
-
-      isDarkMode.value =
-        initialTheme === 'system' ? colorSchemeMedia.value.matches : initialTheme === 'dark'
-
-      colorSchemeMedia.value.addEventListener('change', handleThemeChange)
-      renderChart()
-    })
-
-    onBeforeUnmount(() => {
-      if (colorSchemeMedia.value) {
-        colorSchemeMedia.value.removeEventListener('change', handleThemeChange)
-      }
-    })
 
     watchEffect(() => {
       renderChart()

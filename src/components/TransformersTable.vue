@@ -10,8 +10,9 @@
         type="text"
         :value="searchFilter"
         @input="handleSearchInput($event)"
-        placeholder="Filter by name..."
+        placeholder="Filter by transformer name..."
         class="search-input"
+        :class="{ 'dark-mode-input': isDarkMode }"
       />
     </div>
 
@@ -22,7 +23,11 @@
         <button
           v-for="region in allRegions"
           :key="region"
-          :class="['pill', { 'pill-selected': regionFilter === region }]"
+          :class="[
+            'pill',
+            { 'dark-mode-pill': isDarkMode },
+            { 'pill-selected': regionFilter === region },
+          ]"
           @click="toggleRegion(region)"
         >
           {{ region }}
@@ -37,7 +42,12 @@
         <button
           v-for="health in allHealths"
           :key="health"
-          :class="['pill', { 'pill-selected': healthFilter === health }]"
+          :class="[
+            'pill',
+            { 'dark-mode-pill': isDarkMode },
+            ,
+            { 'pill-selected': healthFilter === health },
+          ]"
           @click="toggleHealth(health)"
         >
           {{ health }}
@@ -69,6 +79,7 @@
               type="checkbox"
               :checked="visibilityState[item.assetId]"
               @change="handleCheckboxChange(item.assetId, $event)"
+              :class="{ 'dark-mode-input': isDarkMode }"
             />
           </td>
         </tr>
@@ -80,6 +91,9 @@
 <script setup lang="ts">
 import type { Region } from '@/views/TransformersView.vue'
 import { type Health, type TransformerData } from '../../server/sampleTransformerData'
+import { useDarkModeStore } from '@/stores/darkMode'
+
+const isDarkMode = useDarkModeStore().isDarkMode
 
 const props = defineProps<{
   transformersData?: TransformerData[]
@@ -132,6 +146,10 @@ const getHealthClass = (health: Health) => {
 </script>
 
 <style scoped>
+h2 {
+  margin-bottom: 16px;
+}
+
 .health-table {
   width: 100%;
   border-collapse: collapse;
@@ -183,22 +201,29 @@ input[type='checkbox'] {
   cursor: pointer;
 }
 
-/* Filter styles */
 .filter-section {
   margin-bottom: 15px;
 }
 
-.filter-section label {
-  display: inline-block;
-  margin-right: 10px;
-  font-weight: bold;
-  min-width: 60px;
+label {
+  margin-right: 6px;
+}
+
+.filter-section {
+  display: flex;
+  gap: 8px;
+}
+
+.dark-mode-input {
+  background-color: #2d3748;
+  color: #f7fafc;
+  border-color: #4a5568;
 }
 
 .search-input {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border: 1px solid #575757;
+  border-radius: 8px;
   width: 300px;
   font-size: 14px;
 }
@@ -210,22 +235,33 @@ input[type='checkbox'] {
 }
 
 .pill {
-  padding: 6px 12px;
-  border-radius: 16px;
+  padding: 3px 8px;
+  border-radius: 8px;
   background-color: #f0f0f0;
   border: 1px solid #ddd;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.2s;
 }
 
-.pill:hover {
-  background-color: #e0e0e0;
+.pill-selected {
+  background-color: #0163cc !important;
+  color: white !important;
+  border-color: #007bff;
 }
 
-.pill-selected {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+.dark-mode-pill {
+  background-color: #2d3748;
+  color: #9dabc5;
+  border-color: #3e4e64;
+}
+
+.pill:hover {
+  background-color: #d4d4d4;
+}
+
+.dark-mode-pill:hover {
+  background-color: #2d3748;
+  color: #ffffff;
 }
 </style>

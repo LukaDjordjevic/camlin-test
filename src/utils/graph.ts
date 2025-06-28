@@ -1,4 +1,4 @@
-import { Data, Layout } from 'plotly.js-dist'
+import type { Data, Layout } from 'plotly.js'
 import type { VoltageReading } from '../../server/sampleTransformerData'
 
 export type ThemeColors = {
@@ -43,7 +43,13 @@ export const createLayout = (colors: ThemeColors, title: string): Partial<Layout
     color: colors.textColor,
   },
   xaxis: {
-    title: 'Date',
+    title: {
+      text: 'Date',
+      font: {
+        size: 12,
+        color: colors.textColor,
+      },
+    },
     type: 'date',
     tickformat: '%Y-%m-%d',
     gridcolor: colors.gridColor,
@@ -51,7 +57,13 @@ export const createLayout = (colors: ThemeColors, title: string): Partial<Layout
     zerolinecolor: colors.lineColor,
   },
   yaxis: {
-    title: 'Voltage (V)',
+    title: {
+      text: 'Voltage (V)',
+      font: {
+        size: 12,
+        color: colors.textColor,
+      },
+    },
     gridcolor: colors.gridColor,
     linecolor: colors.lineColor,
     zerolinecolor: colors.lineColor,
