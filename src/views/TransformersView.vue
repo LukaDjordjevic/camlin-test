@@ -1,77 +1,82 @@
 <template>
   <div class="container">
-    <h2>Region Health Status</h2>
-    <table class="health-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Region</th>
-          <th>Health</th>
-          <th>Show</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in items" :key="item.assetId">
-          <td>{{ item.name }}</td>
-          <td>{{ item.region }}</td>
-          <td>
-            <span :class="['health-badge', getHealthClass(item.health)]">
-              {{ item.health }}
-            </span>
-          </td>
-          <td>
-            <input
-              type="checkbox"
-              v-model="visibilityState[item.assetId]"
-              @change="saveVisibility"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-if="!transformersData" class="loading-spinner">
+      <LoadingSpinner />
+    </div>
+    <div v-else>
+      <h2>Region Health Status</h2>
+      <table class="health-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Region</th>
+            <th>Health</th>
+            <th>Show</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in transformersData" :key="item.assetId">
+            <td>{{ item.name }}</td>
+            <td>{{ item.region }}</td>
+            <td>
+              <span :class="['health-badge', getHealthClass(item.health)]">
+                {{ item.health }}
+              </span>
+            </td>
+            <td>
+              <input
+                type="checkbox"
+                v-model="visibilityState[item.assetId]"
+                @change="saveVisibility"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <VoltageChart
+      v-if="transformersData"
       initial-theme="system"
-      :transformer-data="sampleData"
+      :transformer-data="transformersData"
       v-model:data-indices="visibilityState"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { sampleData, type Health } from '@/api/sampledata'
+import { type Health, type TransformerData } from '../../server/sampleTransformerData'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import VoltageChart from '@/components/VoltageChart.vue'
 import { ref, onMounted } from 'vue'
-
-// Hardcoded data
-// const items = [
-//   { id: 1, name: 'Service A', region: 'North America', health: 'Fair' },
-//   { id: 2, name: 'Service B', region: 'Europe', health: 'Excellent' },
-//   { id: 3, name: 'Service C', region: 'Asia', health: 'Poor' },
-//   { id: 4, name: 'Service D', region: 'South America', health: 'Critical' },
-//   { id: 5, name: 'Service E', region: 'Africa', health: 'Fair' },
-// ]
-
-const items = sampleData
+const transformersData = ref<TransformerData[] | null>(null)
 
 // Initialize visibility state from localStorage or default to true
 const visibilityState = ref({} as Record<string, boolean>)
 
 // Load visibility state from localStorage when component mounts
-onMounted(() => {
-  const savedState = localStorage.getItem('tableVisibilityState')
-  if (savedState) {
-    // Ensure reactivity
-    const parsedState = JSON.parse(savedState)
-    Object.keys(parsedState).forEach((key) => {
-      visibilityState.value[key] = parsedState[key]
-    })
-  } else {
-    // Initialize all items as visible by default
-    items.forEach((item) => {
-      visibilityState.value[item.assetId] = true
-    })
-    saveVisibility()
+onMounted(async () => {
+  try {
+    const response = await fetch('http://localhost:3001/getTransformerData')
+    const data = await response.json()
+    console.log('data:', data)
+    transformersData.value = data
+    const savedState = localStorage.getItem('tableVisibilityState')
+    if (savedState) {
+      // Ensure reactivity
+      const parsedState = JSON.parse(savedState)
+      Object.keys(parsedState).forEach((key) => {
+        visibilityState.value[key] = parsedState[key]
+      })
+    } else {
+      // Initialize all items as visible by default
+      transformersData.value?.forEach((item) => {
+        visibilityState.value[item.assetId] = true
+      })
+      saveVisibility()
+    }
+  } catch (error) {
+    console.error('Error fetching transformer data:', error)
   }
 })
 
@@ -135,23 +140,31 @@ const getHealthClass = (health: Health) => {
 }
 
 .excellent {
-  background-color: #33c46f;
+  background-color: #00893a;
 }
 
 .good {
-  background-color: #2ea2cc;
+  background-color: #3a8c56;
 }
 
 .fair {
-  background-color: #5e34db;
+  background-color: #7c8404;
 }
 
 .poor {
-  background-color: #f39c12;
+  background-color: #9a630b;
 }
 
 .critical {
-  background-color: #e74c3c;
+  background-color: #8e1103;
+}
+
+.loading-spinner {
+  display: flex;
+  width: 100%;
+  height: 80vh;
+  align-items: center;
+  justify-content: center;
 }
 
 input[type='checkbox'] {

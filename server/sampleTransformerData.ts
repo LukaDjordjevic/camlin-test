@@ -1,11 +1,3 @@
-// export enum Health {
-//   Excellent = 'excellent',
-//   Good = 'good',
-//   Fair = 'fair',
-//   Poor = 'poor',
-//   Critical = 'critical',
-// }
-
 export type Health = 'Excellent' | 'Good' | 'Fair' | 'Poor' | 'Critical'
 
 export type VoltageReading = {
@@ -21,10 +13,10 @@ export type TransformerData = {
   lastTenVoltgageReadings: VoltageReading[]
 }
 
-export const sampleData = [
+export const sampleTransformerData = [
   {
     assetId: 1,
-    name: 'Transformer Alpha',
+    name: 'Alpha',
     region: 'London',
     health: 'Good',
     lastTenVoltgageReadings: [
@@ -42,7 +34,7 @@ export const sampleData = [
   },
   {
     assetId: 2,
-    name: 'Transformer Bravo',
+    name: 'Bravo',
     region: 'Manchester',
     health: 'Excellent',
     lastTenVoltgageReadings: [
@@ -60,7 +52,7 @@ export const sampleData = [
   },
   {
     assetId: 3,
-    name: 'Transformer Charlie',
+    name: 'Charlie',
     region: 'Glasgow',
     health: 'Fair',
     lastTenVoltgageReadings: [
@@ -78,7 +70,7 @@ export const sampleData = [
   },
   {
     assetId: 4,
-    name: 'Transformer Delta',
+    name: 'Delta',
     region: 'London',
     health: 'Poor',
     lastTenVoltgageReadings: [
@@ -96,7 +88,7 @@ export const sampleData = [
   },
   {
     assetId: 5,
-    name: 'Transformer Echo',
+    name: 'Echo',
     region: 'Manchester',
     health: 'Critical',
     lastTenVoltgageReadings: [
