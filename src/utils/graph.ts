@@ -1,5 +1,5 @@
-import type { VoltageReading } from '@/api/sampledata'
 import { Data, Layout } from 'plotly.js-dist'
+import type { VoltageReading } from '../../server/sampleTransformerData'
 
 export type ThemeColors = {
   plotBg: string

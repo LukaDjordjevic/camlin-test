@@ -15,12 +15,12 @@ const traceColors = ['teal', 'darkgreen', 'orange', 'blue', 'crimson']
 export default {
   name: 'VoltageChart',
   props: {
-    transformerData: {
+    transformersData: {
       type: Array as PropType<TransformerData[]>,
-      required: true,
+      // required: true,
       validator: (data: TransformerData[]) => data.length > 0,
     },
-    dataIndices: {
+    visibilityState: {
       type: Object as PropType<Record<string, boolean>>,
       required: true,
     },
@@ -35,23 +35,25 @@ export default {
     },
   },
   setup(props) {
-    const { title, transformerData, initialTheme, dataIndices } = props
+    const { initialTheme, visibilityState } = props
     const plotlyChart = ref<HTMLDivElement | null>(null)
     const hasVisibleItems = computed(() => {
-      return Object.values(dataIndices).some(Boolean)
+      return Object.values(visibilityState).some(Boolean)
     })
     const colorSchemeMedia = ref<MediaQueryList | null>(null)
     const isDarkMode = ref(false)
 
     const renderChart = (): void => {
-      if (!plotlyChart.value) return
+      const { title, transformersData, visibilityState } = props
+
+      if (!plotlyChart.value || !transformersData) return
 
       const themeColors = getThemeColors(isDarkMode.value)
-      const filteredTransformerData = transformerData.filter(
-        (transformer) => dataIndices[transformer.assetId],
+      const filteredtransformersData = transformersData.filter(
+        (transformer) => visibilityState[transformer.assetId],
       )
 
-      const traces = filteredTransformerData.map((transformer) =>
+      const traces = filteredtransformersData.map((transformer) =>
         createTrace({
           name: transformer.name,
           themeColors,
