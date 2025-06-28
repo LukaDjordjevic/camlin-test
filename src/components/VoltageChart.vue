@@ -7,7 +7,7 @@
 import { onMounted, ref, onBeforeUnmount, watchEffect, type PropType, computed } from 'vue'
 import Plotly, { Config } from 'plotly.js-dist'
 
-import type { TransformerData } from '@/api/sampledata'
+import type { TransformerData } from '../../server/sampleTransformerData'
 import { createLayout, createTrace, getThemeColors } from '@/utils/graph'
 
 const traceColors = ['teal', 'darkgreen', 'orange', 'blue', 'crimson']
