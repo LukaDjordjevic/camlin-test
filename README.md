@@ -2,6 +2,7 @@
 
 This is a homewrk app for a senior fronend developer position application by Luka Djordjevic (lulo.djordjevic@gmail.com).
 
+<img src="https://drive.usercontent.google.com/download?id=1uwsmOjfnjGGA1UTe0bXoSuLLYoGfK_Dx&export=view&authuser=0" width="350" alt="Description">
 
 ## Installation instruction
 
@@ -10,7 +11,7 @@ This is a homewrk app for a senior fronend developer position application by Luk
 1. Ensure [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/) are installed.
 2. Clone the repository:
    ```bash
-   git clone git@github.com:LukaDjordjevic/camlin-test.git
+   git clone https://github.com/LukaDjordjevic/camlin-test.git
    cd camlin-test
 
 3. Run the application:
@@ -32,7 +33,7 @@ Access the app at http://localhost:3000 and the server API at http://localhost:3
 
    Clone the repository:
    ```bash
-   git clone git@github.com:LukaDjordjevic/camlin-test.git
+   git clone https://github.com/LukaDjordjevic/camlin-test.git
    cd camlin-test
    ```
 2. Install and run the Vue3 app:
