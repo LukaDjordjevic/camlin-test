@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasVisibleItems" ref="plotlyChart" style="width: 100%; height: 500px"></div>
+  <div v-if="hasVisibleItems" ref="plotlyChart" style="width: 100%; height: 300px"></div>
   <div v-else class="empty-state">No items selected - please adjust filters above</div>
 </template>
 

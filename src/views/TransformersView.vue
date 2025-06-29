@@ -46,15 +46,7 @@ onMounted(async () => {
   const savedSearchFilter = localStorage.getItem('searchFilter')
   const savedRegionFilter = localStorage.getItem('regionFilter') as Region
   const savedHealthilter = localStorage.getItem('healthFilter') as Health
-  if (savedVisibility) {
-    visibilityState.value = JSON.parse(savedVisibility)
-  } else {
-    // Initialize all items as visible by default
-    transformersData.value?.forEach((item) => {
-      visibilityState.value[item.assetId] = true
-    })
-    saveVisibility()
-  }
+
   if (savedSearchFilter) searchFilter.value = savedSearchFilter
   if (savedRegionFilter) regionFilter.value = JSON.parse(savedRegionFilter)
   if (savedHealthilter) healthFilter.value = JSON.parse(savedHealthilter)
@@ -64,6 +56,17 @@ onMounted(async () => {
     const response = await fetch('http://localhost:3001/getTransformerData')
     const data = await response.json()
     transformersData.value = data
+
+    // Update visibility states if saved in local storage
+    if (savedVisibility) {
+      visibilityState.value = JSON.parse(savedVisibility)
+    } else {
+      // Initialize all items as visible by default
+      transformersData.value?.forEach((item) => {
+        visibilityState.value[item.assetId] = true
+      })
+      saveVisibility()
+    }
   } catch (error) {
     isFetchingError.value = true
     console.error('Error fetching transformer data:', error)

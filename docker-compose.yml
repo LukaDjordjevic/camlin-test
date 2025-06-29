@@ -4,26 +4,27 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
     ports:
-      - '8080:8080'
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
     depends_on:
       - backend
-    environment:
-      - NODE_ENV=development
-      - VUE_APP_API_URL=http://backend:3001
+    networks:
+      - app-network
 
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile.backend
+      context: ./server
+      dockerfile: Dockerfile
     ports:
       - '3001:3001'
-    volumes:
-      - ./server:/app
-      - /app/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

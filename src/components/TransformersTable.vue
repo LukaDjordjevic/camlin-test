@@ -62,7 +62,7 @@
           <th>Name</th>
           <th>Region</th>
           <th>Health</th>
-          <th>Show</th>
+          <th>Show in graph</th>
         </tr>
       </thead>
       <tbody>
