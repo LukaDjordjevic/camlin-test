@@ -16,11 +16,11 @@ This is a homewrk app for a senior fronend developer position application by Luk
 3. Run the application:
 
    ```bash
-   docker compose up --build
+   docker compose up
    ```
    or for older docker versions
     ```bash
-    docker-compose up --build
+    docker-compose up
     ```
 Access the app at http://localhost:3000 and the server API at http://localhost:3001.
 
