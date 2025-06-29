@@ -4,7 +4,7 @@ This is a homewrk app for a senior fronend developer position application by Luk
 
 <img src="https://drive.usercontent.google.com/download?id=1uwsmOjfnjGGA1UTe0bXoSuLLYoGfK_Dx&export=view&authuser=0" width="350" alt="Description">
 
-## Installation instruction
+## Installation instructions
 
 ### Option 1: Using Docker (Preferred)
 
