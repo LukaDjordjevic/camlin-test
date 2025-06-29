@@ -6,6 +6,7 @@
       <input
         id="search-input"
         type="text"
+        autocomplete="off"
         :value="searchFilter"
         @input="handleSearchInput($event)"
         placeholder="Filter by transformer name..."

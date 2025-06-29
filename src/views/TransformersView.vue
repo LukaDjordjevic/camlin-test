@@ -7,7 +7,6 @@
       <div v-if="isLoadingError">Error fetching data. Please make sure the server is running.</div>
       <div v-else>
         <h2>Region Health Status</h2>
-        <button @click="resetFilters">Reset Filters</button>
         <TransformersTable
           :transformers-data="filteredTransformers"
           :visibility-state="tableVisibilityState"
@@ -105,14 +104,5 @@ const handleHealthUpdate = (health: Health) => toggleFilter(healthFilter, health
 
 const saveVisibility = () => {
   localStorage.setItem('tableVisibilityState', JSON.stringify(tableVisibilityState.value))
-}
-
-const resetFilters = () => {
-  searchFilter.value = ''
-  regionFilter.value = []
-  healthFilter.value = []
-  localStorage.removeItem('searchFilter')
-  localStorage.removeItem('regionFilter')
-  localStorage.removeItem('healthFilter')
 }
 </script>

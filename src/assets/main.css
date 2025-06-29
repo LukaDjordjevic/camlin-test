@@ -172,18 +172,23 @@ label {
   gap: 8px;
 }
 
-.dark-mode-input {
-  background-color: #2d3748;
-  color: #f7fafc;
-  border-color: #4a5568;
-}
-
 .search-input {
   padding: 6px 12px;
-  border: 1px solid #575757;
+  border: 1px solid #ddd;
   border-radius: 8px;
   width: 300px;
   font-size: 14px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #6d6d6d !important;
+}
+
+.dark-mode-input {
+  background-color: #2d3748;
+  color: #9dabc5;
+  border-color: #3e4e64;
 }
 
 .pill-container {
