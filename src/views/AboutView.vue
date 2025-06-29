@@ -9,19 +9,19 @@
     </p>
     <h3>Tech Stack</h3>
     <p>
-      The data is fetched from a tiny node Express server. Fetching is done via vue-query to ensure
+      The data is served by a tiny node Express server. Fetching is done via vue-query to ensure
       caching. Pinia is used for state management (only dark mode store) and vue-router for routing.
-      Plotly is used for displaying graphs.
+      Plotly.js is used for rendering graphs.
     </p>
     <h3>Features</h3>
     <ul>
       <li>
-        The app displays transformers table and a graph with voltage data for each selected
+        The app displays a transformers table and a graph with voltage data for each selected
         transformer
       </li>
       <li>
-        The table shows transformer name, health and region. It also provides a checkboks that
-        controlles whether transfomer data is shown in a graph
+        The table shows transformer name, health and region. It also provides a checkboxes that
+        control whether transformer data is shown in a graph
       </li>
 
       <li>
@@ -37,21 +37,24 @@
         react to system theme change
       </li>
     </ul>
+    <h3>Time to complete the task</h3>
+    <p>Over a weekend binge</p>
+    <h3>Contact</h3>
+    <p>lulo.djordjevic@gmail.com</p>
   </div>
 </template>
 
 <style scoped>
-/* @media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-} */
-p {
-  margin-bottom: 12px;
+h2 {
+  font-weight: bold;
+}
+p,
+li {
+  font-size: 16px;
 }
 h3 {
   font-weight: bold;
+  font-size: 20px;
+  margin-top: 24px;
 }
 </style>
