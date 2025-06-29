@@ -46,7 +46,7 @@ Access the app at http://localhost:3000 and the server API at http://localhost:3
    ```bash
    cd server
    npm install
-   npm run dev
+   npm start
    ```
 Access the app at http://localhost:5173 and the server API at http://localhost:3000.
 
