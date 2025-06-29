@@ -1,6 +1,16 @@
-export type Health = 'Excellent' | 'Good' | 'Fair' | 'Poor' | 'Critical'
+export enum Region {
+  London = 'London',
+  Manchester = 'Manchester',
+  Glasgow = 'Glasgow',
+}
 
-export type Region = 'London' | 'Manchester' | 'Glasgow'
+export enum Health {
+  Excellent = 'Excellent',
+  Good = 'Good',
+  Fair = 'Fair',
+  Poor = 'Poor',
+  Critical = 'Critical',
+}
 
 export type VoltageReading = {
   timestamp: string

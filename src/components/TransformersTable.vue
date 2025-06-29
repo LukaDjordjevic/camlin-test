@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h2>Region Health Status</h2>
-
     <!-- Search Input -->
     <div class="filter-section">
       <label for="search-input">Search:</label>
@@ -26,7 +24,7 @@
           :class="[
             'pill',
             { 'dark-mode-pill': isDarkMode },
-            { 'pill-selected': regionFilter?.includes(region) },
+            { 'pill-selected': regionFilter.includes(region) },
           ]"
           @click="toggleRegion(region)"
         >
@@ -46,7 +44,7 @@
             'pill',
             { 'dark-mode-pill': isDarkMode },
             ,
-            { 'pill-selected': healthFilter?.includes(health) },
+            { 'pill-selected': healthFilter.includes(health) },
           ]"
           @click="toggleHealth(health)"
         >
@@ -77,9 +75,10 @@
           <td>
             <input
               type="checkbox"
+              class="checkbox"
+              :class="{ 'checkbox-dark-mode': isDarkMode }"
               :checked="visibilityState[item.assetId]"
               @change="handleCheckboxChange(item.assetId, $event)"
-              :class="{ 'dark-mode-input': isDarkMode }"
             />
           </td>
         </tr>
@@ -90,8 +89,8 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import type { Region } from '../../server/sampleTransformerData'
-import { type Health, type TransformerData } from '../../server/sampleTransformerData'
+import { Region, Health } from '../../server/sampleTransformerData'
+import { type TransformerData } from '../../server/sampleTransformerData'
 import { useDarkModeStore } from '@/stores/darkMode'
 
 const darkModeStore = useDarkModeStore()
@@ -112,8 +111,8 @@ const emit = defineEmits<{
   (event: 'update-health', health: Health): void
 }>()
 
-const allRegions = ['London', 'Manchester', 'Glasgow'] as const
-const allHealths = ['Excellent', 'Good', 'Fair', 'Poor', 'Critical'] as const
+const allRegions = Object.values(Region) as Region[]
+const allHealths = Object.values(Health) as Health[]
 
 const handleCheckboxChange = (assetId: number, event: Event) => {
   const isChecked = (event.target as HTMLInputElement).checked
@@ -133,14 +132,5 @@ const toggleHealth = (health: Health) => {
   emit('update-health', health)
 }
 
-const getHealthClass = (health: Health) => {
-  const healthMap = {
-    Excellent: 'excellent',
-    Good: 'good',
-    Fair: 'fair',
-    Poor: 'poor',
-    Critical: 'critical',
-  } as Record<Health, string>
-  return healthMap[health] || ''
-}
+const getHealthClass = (health: Health) => health.toLowerCase()
 </script>

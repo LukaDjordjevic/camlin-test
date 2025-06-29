@@ -69,6 +69,45 @@ h2 {
   justify-content: center;
 }
 
+.checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #898989;
+  border-radius: 2px;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox:checked::after {
+  content: '\2713';
+  position: absolute;
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 16px;
+  text-align: center;
+}
+
+.checkbox-dark-mode {
+  background-color: #003d63;
+  border: 1px solid #343434;
+}
+
+.checkbox-dark-mode {
+  background-color: #003d63;
+}
+
+.checkbox:checked {
+  background-color: #1961c5;
+  /* appearance: initial; */
+}
+
 .health-table {
   width: 100%;
   border-collapse: collapse;
