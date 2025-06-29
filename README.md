@@ -1,6 +1,6 @@
 # camlin-test
 
-This is a homewrk app for a senior fronend developer position application by Luka Djordjevic.
+This is a homewrk app for a senior fronend developer position application by Luka Djordjevic (lulo.djordjevic@gmail.com).
 
 
 ## Installation instruction
@@ -28,25 +28,25 @@ Access the app at http://localhost:3000 and the server API at http://localhost:3
 
 ### Option 2: Local Development
 
-Ensure Node.js (v16 or higher) and npm are installed.
+1. Ensure Node.js (v16 or higher) and npm are installed.
 
-Clone the repository:
-```bash
-git clone git@github.com:LukaDjordjevic/camlin-test.git
-cd camlin-test
-```
-Install and run the Vue3 app:
+   Clone the repository:
+   ```bash
+   git clone git@github.com:LukaDjordjevic/camlin-test.git
+   cd camlin-test
+   ```
+2. Install and run the Vue3 app:
 
-```bash
-npm install
-npm run dev
-```
-In a separate terminal, install and run the Express server:
+   ```bash
+   npm install
+   npm run dev
+   ```
+3. In a separate terminal, install and run the Express server:
 
-```bash
-cd server
-npm install
-npm run dev
-```
+   ```bash
+   cd server
+   npm install
+   npm run dev
+   ```
 Access the app at http://localhost:5173 and the server API at http://localhost:3000.
 
