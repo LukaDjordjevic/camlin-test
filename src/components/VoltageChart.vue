@@ -38,7 +38,7 @@ watchEffect(() => {
       name: transformer.name,
       themeColors,
       voltageData: transformer.lastTenVoltgageReadings,
-      traceColor: traceColors[Number(transformer.assetId) % traceColors.length],
+      traceColor: traceColors[transformer.assetId % traceColors.length],
       isDarkMode: isDarkMode.value,
     }),
   )
