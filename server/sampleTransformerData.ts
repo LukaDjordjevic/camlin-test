@@ -1,5 +1,7 @@
 export type Health = 'Excellent' | 'Good' | 'Fair' | 'Poor' | 'Critical'
 
+export type Region = 'London' | 'Manchester' | 'Glasgow'
+
 export type VoltageReading = {
   timestamp: string
   voltage: string
@@ -8,7 +10,7 @@ export type VoltageReading = {
 export type TransformerData = {
   assetId: number
   name: string
-  region: string
+  region: Region
   health: Health
   lastTenVoltgageReadings: VoltageReading[]
 }

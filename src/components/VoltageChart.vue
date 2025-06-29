@@ -4,13 +4,14 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref, watchEffect, type PropType, computed } from 'vue'
-// @ts-expect-error
+import { ref, watchEffect, type PropType, computed } from 'vue'
+// @ts-expect-error Missing declaration file
 import Plotly, { type Config, type PlotlyHTMLElement } from 'plotly.js-dist'
 import { useDarkModeStore } from '@/stores/darkMode'
 
 import { createLayout, createTrace, getThemeColors } from '@/utils/graph'
 import type { TransformerData } from '../../server/sampleTransformerData'
+import { storeToRefs } from 'pinia'
 
 const traceColors = ['teal', 'darkgreen', 'orange', 'blue', 'crimson']
 
@@ -32,14 +33,16 @@ export default {
     const hasVisibleItems = computed(() => {
       return props.transformersData?.length
     })
-    const isDarkMode = useDarkModeStore().isDarkMode
+
+    const darkModeStore = useDarkModeStore()
+    const { isDarkMode } = storeToRefs(darkModeStore)
 
     const renderChart = (): void => {
       const { title, transformersData } = props
 
       if (!plotlyChart.value || !transformersData) return
 
-      const themeColors = getThemeColors(isDarkMode)
+      const themeColors = getThemeColors(isDarkMode.value)
 
       const traces = transformersData.map((transformer) =>
         createTrace({
@@ -47,7 +50,7 @@ export default {
           themeColors,
           voltageData: transformer.lastTenVoltgageReadings,
           traceColor: traceColors[transformer.assetId % traceColors.length],
-          isDarkMode,
+          isDarkMode: isDarkMode.value,
         }),
       )
 

@@ -25,13 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import { type Health, type TransformerData } from '../../server/sampleTransformerData'
+import { type Health, type Region, type TransformerData } from '../../server/sampleTransformerData'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import VoltageChart from '@/components/VoltageChart.vue'
 import TransformersTable from '@/components/TransformersTable.vue'
 import { ref, onMounted, computed } from 'vue'
-
-export type Region = 'London' | 'Manchester' | 'Glasgow'
 
 // Initialize local states
 const transformersData = ref<TransformerData[] | null>(null)
@@ -39,11 +37,11 @@ const visibilityState = ref<Record<string, boolean>>({})
 const isFetching = ref(true)
 const isFetchingError = ref(false)
 const searchFilter = ref('')
-const regionFilter = ref<Region | null>(null)
-const healthFilter = ref<Health | null>(null)
+const regionFilter = ref<Region[]>([])
+const healthFilter = ref<Health[]>([])
 
 onMounted(async () => {
-  // Initialize filter states fron local storage
+  // Update filter states fron local storage
   const savedVisibility = localStorage.getItem('tableVisibilityState')
   const savedSearchFilter = localStorage.getItem('searchFilter')
   const savedRegionFilter = localStorage.getItem('regionFilter') as Region
@@ -58,8 +56,8 @@ onMounted(async () => {
     saveVisibility()
   }
   if (savedSearchFilter) searchFilter.value = savedSearchFilter
-  if (savedRegionFilter) regionFilter.value = savedRegionFilter
-  if (savedHealthilter) healthFilter.value = savedHealthilter
+  if (savedRegionFilter) regionFilter.value = JSON.parse(savedRegionFilter)
+  if (savedHealthilter) healthFilter.value = JSON.parse(savedHealthilter)
 
   // Fetch transformers data from server
   try {
@@ -79,9 +77,11 @@ const filteredTransformers = computed(() =>
     // Search filter
     const matchesSearch = transformer.name.toLowerCase().includes(searchFilter.value.toLowerCase())
     // Region filter
-    const matchesRegion = !regionFilter.value || transformer.region === regionFilter.value
+    const matchesRegion =
+      !regionFilter.value.length || regionFilter.value.includes(transformer.region)
     // Health filter
-    const matchesHealth = !healthFilter.value || transformer.health === healthFilter.value
+    const matchesHealth =
+      !healthFilter.value.length || healthFilter.value.includes(transformer.health)
 
     return matchesSearch && matchesRegion && matchesHealth
   }),
@@ -103,14 +103,22 @@ const handleSearchUpdate = (searchString: string) => {
   localStorage.setItem('searchFilter', searchFilter.value)
 }
 
-const handleRegionUpdate = (region: Region | null) => {
-  regionFilter.value = region
-  localStorage.setItem('regionFilter', regionFilter.value || '')
+const handleRegionUpdate = (region: Region) => {
+  if (regionFilter.value.includes(region)) {
+    regionFilter.value = regionFilter.value.filter((element) => element !== region)
+  } else {
+    regionFilter.value = [...regionFilter.value, region]
+  }
+  localStorage.setItem('regionFilter', JSON.stringify(regionFilter.value))
 }
 
-const handleHealthUpdate = (health: Health | null) => {
-  healthFilter.value = health
-  localStorage.setItem('healthFilter', healthFilter.value || '')
+const handleHealthUpdate = (health: Health) => {
+  if (healthFilter.value.includes(health)) {
+    healthFilter.value = healthFilter.value.filter((element) => element !== health)
+  } else {
+    healthFilter.value = [...healthFilter.value, health]
+  }
+  localStorage.setItem('healthFilter', JSON.stringify(healthFilter.value))
 }
 
 const saveVisibility = () => {

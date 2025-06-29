@@ -26,7 +26,7 @@
           :class="[
             'pill',
             { 'dark-mode-pill': isDarkMode },
-            { 'pill-selected': regionFilter === region },
+            { 'pill-selected': regionFilter?.includes(region) },
           ]"
           @click="toggleRegion(region)"
         >
@@ -46,7 +46,7 @@
             'pill',
             { 'dark-mode-pill': isDarkMode },
             ,
-            { 'pill-selected': healthFilter === health },
+            { 'pill-selected': healthFilter?.includes(health) },
           ]"
           @click="toggleHealth(health)"
         >
@@ -89,25 +89,27 @@
 </template>
 
 <script setup lang="ts">
-import type { Region } from '@/views/TransformersView.vue'
+import { storeToRefs } from 'pinia'
+import type { Region } from '../../server/sampleTransformerData'
 import { type Health, type TransformerData } from '../../server/sampleTransformerData'
 import { useDarkModeStore } from '@/stores/darkMode'
 
-const isDarkMode = useDarkModeStore().isDarkMode
+const darkModeStore = useDarkModeStore()
+const { isDarkMode } = storeToRefs(darkModeStore)
 
-const props = defineProps<{
+defineProps<{
   transformersData?: TransformerData[]
   visibilityState: Record<string, boolean>
   searchFilter: string
-  regionFilter: Region | null
-  healthFilter: Health | null
+  regionFilter: Region[]
+  healthFilter: Health[]
 }>()
 
 const emit = defineEmits<{
   (event: 'update-visibility', assetId: string, isVisible: boolean): void
   (event: 'update-search', searchString: string): void
-  (event: 'update-region', region: Region | null): void
-  (event: 'update-health', health: Health | null): void
+  (event: 'update-region', region: Region): void
+  (event: 'update-health', health: Health): void
 }>()
 
 const allRegions = ['London', 'Manchester', 'Glasgow'] as const
@@ -124,13 +126,11 @@ const handleSearchInput = (event: Event) => {
 }
 
 const toggleRegion = (region: Region) => {
-  const newRegion = props.regionFilter === region ? null : region
-  emit('update-region', newRegion)
+  emit('update-region', region)
 }
 
 const toggleHealth = (health: Health) => {
-  const newHealth = props.healthFilter === health ? null : health
-  emit('update-health', newHealth)
+  emit('update-health', health)
 }
 
 const getHealthClass = (health: Health) => {
