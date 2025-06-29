@@ -1,14 +1,14 @@
 <template>
-  <div class="container">
-    <div v-if="isFetching" class="spinner-container">
+  <div class="table-container">
+    <div v-if="isLoading" class="spinner-container">
       <LoadingSpinner />
     </div>
     <div v-else>
-      <div v-if="isFetchingError">Error fetching data. Please make sure the server is running.</div>
+      <div v-if="isLoadingError">Error fetching data. Please make sure the server is running.</div>
       <div v-else>
         <TransformersTable
           :transformers-data="filteredTransformers"
-          :visibility-state="visibilityState"
+          :visibility-state="tableVisibilityState"
           :search-filter="searchFilter"
           :region-filter="regionFilter"
           :health-filter="healthFilter"
@@ -25,64 +25,45 @@
 </template>
 
 <script setup lang="ts">
-import { type Health, type Region, type TransformerData } from '../../server/sampleTransformerData'
+import { type Health, type Region } from '../../server/sampleTransformerData'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import VoltageChart from '@/components/VoltageChart.vue'
 import TransformersTable from '@/components/TransformersTable.vue'
 import { ref, onMounted, computed } from 'vue'
+import { useTransformersQuery } from '@/services/transformesApi'
 
 // Initialize local states
-const transformersData = ref<TransformerData[] | null>(null)
-const visibilityState = ref<Record<string, boolean>>({})
-const isFetching = ref(true)
-const isFetchingError = ref(false)
 const searchFilter = ref('')
 const regionFilter = ref<Region[]>([])
 const healthFilter = ref<Health[]>([])
+const tableVisibilityState = ref<Record<string, boolean>>({})
+
+const {
+  data: transformersData,
+  isLoading,
+  isError: isLoadingError,
+} = useTransformersQuery(tableVisibilityState)
 
 onMounted(async () => {
   // Update filter states fron local storage
-  const savedVisibility = localStorage.getItem('tableVisibilityState')
   const savedSearchFilter = localStorage.getItem('searchFilter')
   const savedRegionFilter = localStorage.getItem('regionFilter') as Region
   const savedHealthilter = localStorage.getItem('healthFilter') as Health
+  const savedVisibility = localStorage.getItem('tableVisibilityState')
 
   if (savedSearchFilter) searchFilter.value = savedSearchFilter
   if (savedRegionFilter) regionFilter.value = JSON.parse(savedRegionFilter)
   if (savedHealthilter) healthFilter.value = JSON.parse(savedHealthilter)
-
-  // Fetch transformers data from server
-  try {
-    const response = await fetch('http://localhost:3001/getTransformerData')
-    const data = await response.json()
-    transformersData.value = data
-
-    // Update visibility states if saved in local storage
-    if (savedVisibility) {
-      visibilityState.value = JSON.parse(savedVisibility)
-    } else {
-      // Initialize all items as visible by default
-      transformersData.value?.forEach((item) => {
-        visibilityState.value[item.assetId] = true
-      })
-      saveVisibility()
-    }
-  } catch (error) {
-    isFetchingError.value = true
-    console.error('Error fetching transformer data:', error)
-  } finally {
-    isFetching.value = false
+  if (savedVisibility) {
+    tableVisibilityState.value = JSON.parse(savedVisibility)
   }
 })
 
 const filteredTransformers = computed(() =>
   transformersData.value?.filter((transformer) => {
-    // Search filter
     const matchesSearch = transformer.name.toLowerCase().includes(searchFilter.value.toLowerCase())
-    // Region filter
     const matchesRegion =
       !regionFilter.value.length || regionFilter.value.includes(transformer.region)
-    // Health filter
     const matchesHealth =
       !healthFilter.value.length || healthFilter.value.includes(transformer.health)
 
@@ -90,14 +71,14 @@ const filteredTransformers = computed(() =>
   }),
 )
 
-const chartData = computed(() => {
-  return filteredTransformers.value?.filter(
-    (transformer) => visibilityState.value[transformer.assetId],
-  )
-})
+const chartData = computed(() =>
+  filteredTransformers.value?.filter(
+    (transformer) => tableVisibilityState.value[transformer?.assetId],
+  ),
+)
 
 const handleVisibilityUpdate = (assetId: string, isVisible: boolean) => {
-  visibilityState.value[assetId] = isVisible
+  tableVisibilityState.value[assetId] = isVisible
   saveVisibility()
 }
 
@@ -125,23 +106,6 @@ const handleHealthUpdate = (health: Health) => {
 }
 
 const saveVisibility = () => {
-  localStorage.setItem('tableVisibilityState', JSON.stringify(visibilityState.value))
+  localStorage.setItem('tableVisibilityState', JSON.stringify(tableVisibilityState.value))
 }
 </script>
-
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.spinner-container {
-  display: flex;
-  width: 100%;
-  height: 80vh;
-  align-items: center;
-  justify-content: center;
-}
-</style>
