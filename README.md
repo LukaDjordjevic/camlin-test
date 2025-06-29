@@ -1,45 +1,52 @@
 # camlin-test
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a homewrk app for a senior fronend developer position application by Luka Djordjevic.
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Installation instruction
 
-## Type Support for `.vue` Imports in TS
+### Option 1: Using Docker (Preferred)
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+1. Ensure [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/) are installed.
+2. Clone the repository:
+   ```bash
+   git clone git@github.com:LukaDjordjevic/camlin-test.git
+   cd camlin-test
 
-## Customize configuration
+3. Run the application:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+   ```bash
+   docker compose up --build
+   ```
+   or for older docker versions
+    ```bash
+    docker-compose up --build
+    ```
+Access the app at http://localhost:3000 and the server API at http://localhost:3001.
 
-## Project Setup
 
-```sh
-npm install
+
+### Option 2: Local Development
+
+Ensure Node.js (v16 or higher) and npm are installed.
+
+Clone the repository:
+```bash
+git clone git@github.com:LukaDjordjevic/camlin-test.git
+cd camlin-test
 ```
+Install and run the Vue3 app:
 
-### Compile and Hot-Reload for Development
-
-```sh
+```bash
+npm install
 npm run dev
 ```
+In a separate terminal, install and run the Express server:
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
+```bash
+cd server
+npm install
+npm run dev
 ```
+Access the app at http://localhost:5173 and the server API at http://localhost:3000.
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
