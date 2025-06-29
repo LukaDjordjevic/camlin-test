@@ -6,7 +6,7 @@ const BASE_API_URL = 'http://localhost:3001'
 
 const fetchTransformerData = async (): Promise<TransformerData[]> => {
   const response = await fetch(`${BASE_API_URL}/getTransformerData`)
-  if (!response.ok) throw new Error('Network response was not ok')
+  if (!response.ok) throw new Error('fetchTransformerData failed')
   return response.json()
 }
 
@@ -15,8 +15,8 @@ export const useTransformersQuery = (tableVisibilityState: Ref<Record<string, bo
     queryKey: ['transformers'],
     queryFn: async () => {
       const data = await fetchTransformerData()
-      console.log('data:', data)
 
+      // Once we have the transformers data, we need to initialize tableVisibilityState (checkboxes)
       const savedVisibility = localStorage.getItem('tableVisibilityState')
 
       if (savedVisibility) {
@@ -33,6 +33,5 @@ export const useTransformersQuery = (tableVisibilityState: Ref<Record<string, bo
 
       return data
     },
-    staleTime: 5 * 60 * 1000,
   })
 }
